@@ -19,4 +19,8 @@ class ProductController extends BaseController
             return $this->out(data: $data, status: "OK");
         }
     }
+
+    public function findOne(Products $product) {
+        return $this->out(data: $product, status: "OK");
+    }
 }
