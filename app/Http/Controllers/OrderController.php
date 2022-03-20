@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Orders;
 use App\Models\Products;
-use CoinGate\Merchant\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 
@@ -41,8 +40,8 @@ class OrderController extends BaseController
     }
 
     public function findAll() {
-        $order = Order::query()
-                    ->leftJoin('costumers', 'costumers.id','=','orders.customer_id')
+        $order = Orders::query()
+                    ->leftJoin('customers', 'customers.id','=','orders.customer_id')
                     ->leftJoin('products', 'products.id','=','orders.product_id');
 
         if (request()->has('q')) {
@@ -88,6 +87,16 @@ class OrderController extends BaseController
             data: $result ? $order : null,
             error: $result ? null : ["Gagal merubah data"],
             code: $result ? 201 : 504
+        );
+    }
+
+    public function delete(Orders $order) {
+        $result = $order->delete();
+        return $this->out(
+            status: $result ? "OK" : "Gagal",
+            data: $result ? $order : null,
+            error: $result ? null : ["Gagal menghapus data"],
+            code: $result ? 200 : 504
         );
     }
 }

@@ -35,4 +35,5 @@ Route::controller(OrderController::class)->group(function() {
     Route::post('/order', "store");
     Route::get('/order', "findAll");
     Route::patch('/order/{order}', "update");
+    Route::delete('order/{order}', "delete");
 });
