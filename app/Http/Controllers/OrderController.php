@@ -37,4 +37,29 @@ class OrderController extends BaseController
             return $this->out(status: "Gagal", error: ["Order gagal disimpan"], code: 504);
         }
     }
+
+    public function findAll() {
+        $order = Order::query()
+                    ->leftJoin('costumers', 'costumers.id','=','orders.customer_id')
+                    ->leftJoin('products', 'products.id','=','orders.product_id');
+
+        if (request()->has('q')) {
+            // jika ada query "q" untuk pencarian products.title
+            $q = request('q');
+            $order->where("products.title", "like", "%$q%");
+        }
+
+        // data pagination
+        $data = $order->paginate(10,
+                    [
+                        "orders.*",
+                        "customers.first_name",
+                        "customers.last_name",
+                        "customers.address",
+                        "customers.city",
+                        "products.title as product_title"
+                    ]);
+
+        return $this->out(data:$data, status:"OK");
+    }
 }
