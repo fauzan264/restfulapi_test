@@ -25,8 +25,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/auth', [AuthController::class, "auth"]);
 
 // Product
-Route::get('/product', [ProductController::class, "findAll"]);
-Route::get('/product/{product}', [ProductController::class, "findOne"]);
+Route::controller(ProductController::class)->group(function() {
+    Route::get('/product', "findAll");
+    Route::get('/product/{product}', "findOne");
+});
 
 // Order
-Route::post('/order', [OrderController::class, "store"]);
+Route::controller(ProductController::class)->group(function() {
+    Route::post('/order', "store");
+    Route::get('/order', "findAll");
+});
