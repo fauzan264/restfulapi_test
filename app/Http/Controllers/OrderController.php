@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Products;
-use App\Models\Orders;
 use Carbon\Carbon;
+use App\Models\Orders;
+use App\Models\Products;
+use CoinGate\Merchant\Order;
+use Illuminate\Http\Request;
+use App\Http\Controllers\BaseController;
 
 class OrderController extends BaseController
 {
@@ -61,5 +63,31 @@ class OrderController extends BaseController
                     ]);
 
         return $this->out(data:$data, status:"OK");
+    }
+
+    public function update(Orders $order) {
+        $product = Products::find(request('product_id'));
+
+        if ($product == NULL) {
+            return $this->out(
+                status:"Gagal",
+                code:404,
+                error:["Produk tidak ditemukan"]
+            );
+        }
+
+        $order->product_id  = $product->id;
+        $order->customer_id = request('customer_id');
+        $order->quantity    = request('quantity');
+        $order->price       = $product->price;
+
+        $result = $order->save();
+
+        return $this->out(
+            status: $result ? "OK" : "Gagal",
+            data: $result ? $order : null,
+            error: $result ? null : ["Gagal merubah data"],
+            code: $result ? 201 : 504
+        );
     }
 }

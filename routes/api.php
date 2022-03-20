@@ -31,7 +31,8 @@ Route::controller(ProductController::class)->group(function() {
 });
 
 // Order
-Route::controller(ProductController::class)->group(function() {
+Route::controller(OrderController::class)->group(function() {
     Route::post('/order', "store");
     Route::get('/order', "findAll");
+    Route::patch('/order/{order}', "update");
 });
