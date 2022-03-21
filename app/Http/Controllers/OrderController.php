@@ -10,6 +10,10 @@ use App\Http\Controllers\BaseController;
 
 class OrderController extends BaseController
 {
+    public function __construct() {
+        $this->middleware('authorization');
+    }
+
     public function store() {
         // cari data produk berdasarkan product_id
         $product = Products::find(\request('product_id'));
